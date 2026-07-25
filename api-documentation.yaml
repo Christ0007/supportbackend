@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: API de Gestion des Incidents
+  version: 1.0.0
+  description: API pour la plateforme de gestion des incidents et support technique
+
+servers:
+  - url: http://localhost:8000/api
+    description: Serveur local
+
+security:
+  - bearerAuth: []
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentification
+      summary: Connexion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Connexion réussie
+          
+  /incidents:
+    get:
+      tags:
+        - Incidents
+      summary: Liste des incidents
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: priority
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste des incidents
+          
+    post:
+      tags:
+        - Incidents
+      summary: Créer un incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - priority
+                - category
+                - software_solution_id
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                priority:
+                  type: string
+                  enum: [low, medium, high, critical]
+                category:
+                  type: string
+                software_solution_id:
+                  type: integer
+      responses:
+        '201':
+          description: Incident créé
